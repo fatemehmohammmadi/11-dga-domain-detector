@@ -1,20 +1,8 @@
-# 11 — DGA Domain Detector
+# DGA Domain Detector
 
-Detect **Domain Generation Algorithm (DGA)** style domains using lexical features and a classical ML classifier — a popular threat-hunting building block.
+Lexical detector for Domain Generation Algorithm style names (high entropy, weird length, odd TLDs, etc.).
 
-## Why this is useful
-
-Malware families often generate pseudo-random domains for C2. Lexical detectors are fast, explainable, and easy to demo on GitHub.
-
-## Layout
-
-```
-11-dga-domain-detector/
-├── generate_domains.py
-├── train_dga_detector.py
-├── data/domains.csv
-└── outputs/
-```
+I use this pattern a lot in DNS hunting: cheap features, fast model, easy to explain to an analyst.
 
 ## Run
 
@@ -24,8 +12,21 @@ python generate_domains.py
 python train_dga_detector.py
 ```
 
-## Sample outputs
+## Features
 
-- `outputs/metrics.json`
-- `outputs/top_dga_scores.csv`
-- `outputs/feature_importance.csv`
+- domain / label length
+- digit ratio, vowel ratio, unique-char ratio
+- Shannon entropy on the left-most label
+- hyphen + digit counts
+
+## Outputs
+
+`outputs/metrics.json`, `outputs/top_dga_scores.csv`, `outputs/feature_importance.csv`
+
+## Limits
+
+Won't catch word-based DGAs that look like real brand tokens. Pair with NXDOMAIN rates and newly observed domains in production.
+
+## License
+
+MIT

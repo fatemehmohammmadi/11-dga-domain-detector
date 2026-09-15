@@ -25,11 +25,13 @@ def entropy(s: str) -> float:
 
 
 def feats(domain: str) -> dict:
+    # mostly look at the left-most label; TLD alone isn't very discriminative here
     host = domain.split(".")[0]
     return {
         "length": len(domain),
         "label_length": len(host),
         "digit_ratio": sum(ch.isdigit() for ch in host) / max(len(host), 1),
+        # DGA strings are often light on vowels
         "vowel_ratio": sum(ch in "aeiou" for ch in host.lower()) / max(len(host), 1),
         "unique_char_ratio": len(set(host.lower())) / max(len(host), 1),
         "entropy": entropy(host.lower()),
